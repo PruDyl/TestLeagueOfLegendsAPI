@@ -1,2 +1,2 @@
 # TestLeagueOfLegendsAPI
-Some scripts to test league of legens api
+Some scripts to test league of legends api
