@@ -13,6 +13,7 @@ args = parser.parse_args()
 
 APIKEY = args.key
 PREFIX_URL = 'https://euw1.api.riotgames.com/'
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def request_api(endpoint, query_params={}):
@@ -25,8 +26,9 @@ def request_api(endpoint, query_params={}):
 
 def get_all_champions():
     champions = {}
-    if os.path.exists('./data/champions.json'):
-        with open('./data/champions.json', 'r+') as f:
+    champion_data_path = os.path.join(BASE_PATH, 'data/champions.json')
+    if os.path.exists(champion_data_path):
+        with open(champion_data_path, 'r+') as f:
             champions = json.loads(f.read())
     else:
         endpoint = 'lol/static-data/v3/champions'
@@ -35,7 +37,7 @@ def get_all_champions():
         }
         response = request_api(endpoint, query_params)
         champions = response.json()['data']
-        with open('./data/champions.json', 'w+') as f:
+        with open(champion_data_path, 'w+') as f:
             f.write(json.dumps(champions))
     return champions
 
