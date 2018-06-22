@@ -11,14 +11,13 @@ parser.add_argument('--summoner', help="Summoner's name")
 
 args = parser.parse_args()
 
-APIKEY = args.key
 PREFIX_URL = 'https://euw1.api.riotgames.com/'
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def request_api(endpoint, query_params={}):
     query_params.update({
-        'api_key': APIKEY
+        'api_key': args.key
     })
     url = PREFIX_URL+endpoint
     return requests.get(url, params=query_params)
@@ -98,11 +97,19 @@ def get_scheduler(index_time):
         scheduler.append(t)
         end_time = begin_time
         begin_time = end_time - datetime.timedelta(days=7)
+    # We can miss some games if last begin time is different from index time
+    if index_time != begin_time:
+        last_schedule = (
+            index_time.strftime('%s')+'000', end_time.strftime('%s')+'000')
+        scheduler.append(last_schedule)
     return scheduler
 
 
-def run():
+def run(api_key=None, summoner_name=None):
     print('Starting league of legends script')
+    # If script is imported by module, override arguments
+    args.key = api_key if api_key else args.key
+    args.summoner = summoner_name if summoner_name else args.summoner
     start_time = datetime.datetime.now()
     champions = get_all_champions()
     summoner_name = args.summoner
@@ -113,8 +120,8 @@ def run():
     matches = get_match_with_champions_masteries(
         champions_masteries, summoner_infos['accountId'])
     end_time = datetime.datetime.now() - start_time
-    print('Finished script in %s seconds' % str(end_time.total_seconds()))
     print('Matches: ', matches)
+    print('Finished script in %s seconds' % str(end_time.total_seconds()))
 
 
 if __name__ == "__main__":
