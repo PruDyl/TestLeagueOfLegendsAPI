@@ -1,14 +1,26 @@
-# Requirements:
+# Script to have the last 2 months' matches in discord
+
+## Requirements:
 ```
 python3.5
 ```
 
-# Usage:
+## Usage:
+### Main usage:
 ```
-python main.py -h
-python main.py --key <APIKEY> --summoner <SUMMONERS_NAME>
+python lol_stats.discord.py -h
+python lol_stats.discord.py --key <API_KEY> --token <DISCORD_BOT_TOKEN>
 ```
 
-# Improvements
+### Module usage:
+```
+import lol_stat
+
+lol_stat.run(api_key="", summoner="")
+```
+
+## Improvements
 * Use a db for data instead of files
-* Parse data to be human readable
+* Stylish discord embed message
+* Logging
+* Discord bot more friendly (add communication with user)
